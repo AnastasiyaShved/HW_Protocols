@@ -8,11 +8,13 @@
 import UIKit
 
 //MARK: - Protocols -
+// объявление протокола
 protocol SomeProtocol {
     var mustBeSettable: Int {get set}
     var doesNotNeedToBeSettable: Int {get}
 }
 
+// пример реалиции требований протокола типом даных
 struct SomeStruct: SomeProtocol {
     var mustBeSettable: Int
     let doesNotNeedToBeSettable: Int
@@ -168,4 +170,132 @@ func HappyBirthday(celebrator: Name1 & Aged) {
 }
 let bertPer = Person1(name: "Jon", age: 55)
 //HappyBirthday(celebrator: bertPer)
+
+//MARK: - Extation -
+
+// вычсляемые свойства
+extension Double {
+    var asKM: Double { return self / 1000.0 }
+    var asM: Double { return self }
+    var asCM: Double { return self * 1000.0 }
+    var asMM: Double { return self * 1000.0 }
+}
+
+let length: Double = 25
+func func3() {
+    length.asKM
+    length.asMM
+}
+
+extension Double {
+    var asFT: Double {
+        get {
+            return self / 0.3048
+        }
+        set(newValue) {
+            self = newValue * 0.3048
+        }
+    }
+}
+
+var distance: Double = 100
+func func4() {
+    _ = distance.asFT
+    distance.asFT = 150
+    
+}
+
+// методы в расширениях
+extension Int {
+    func repetitions(task: () -> ()) {
+        for _ in 0..<self {
+            task()
+        }
+    }
+}
+func funk5() {
+    3.repetitions {
+        print("Swift")
+    }
+}
+
+extension Int {
+    mutating func sqared() {
+        self = self * self
+    }
+}
+
+//инициализатры в расщирениях
+struct Line {
+    var pointOne: (Double, Double)
+    var pointTwo: (Double, Double)
+}
+
+extension Double {
+    init(line: Line) {
+        self = sqrt(
+            pow((line.pointTwo.0 - line.pointOne.0), 2) +
+            pow((line.pointTwo.1 - line.pointOne.1), 2)
+        )
+    }
+}
+var myLine = Line(pointOne: (10, 10), pointTwo: (14, 10))
+var lineLength = Double(line: myLine)
+
+//сабскрипты в расширениях
+
+extension Int {
+    subscript( digitIndex: Int ) -> Int {
+        var base = 1
+        var index = digitIndex
+        while index > 0 {
+            base *= 10
+            index -= 1
+        }
+        return (self / base) % 10
+    }
+}
+
+// подпись объектного типа на протоколах
+protocol Text {
+    func asText() -> String
+}
+
+extension Int: Text {
+    func asText() -> String {
+        return String(self)
+    }
+}
+
+//разширение протоколов и реализация по умолчанию
+protocol Descriptional {
+    func getDesc() -> String
+}
+
+extension Descriptional {
+    func getDesc() -> String {
+        return "описание"
+    }
+}
+
+class myClass: Descriptional {}
+func func6() {
+    print(myClass().getDesc())
+}
+
+class myStruct: Descriptional {
+    func getDesc() -> String {
+        return "описание структуры"
+    }
+}
+func func7() {
+    myStruct().getDesc()
+}
+
+// расширение ранее реализованного протокола
+extension Text {
+    func about() -> String {
+        return "данный тип поддерживает протокол Text"
+    }
+}
 
